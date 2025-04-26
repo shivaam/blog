@@ -1,4 +1,4 @@
-baseURL = 'https://example.org/'
+baseURL = 'https://blog-7xu.pages.dev/'
 theme = 'hugo-bearblog'
 title = "Shiv's Blog"
 author = "Shivam"
@@ -9,7 +9,7 @@ disableKinds = ["taxonomy"]
 ignoreErrors = ["error-disable-taxonomy"]
 
 [permalinks]
-  life = "/:slug/"
+  life = "/life/:slug/"
   book-notes = "/book-notes/:slug/"
 
 [params]
