@@ -1,0 +1,32 @@
+baseURL = 'https://example.org/'
+theme = 'hugo-bearblog'
+title = "Shiv's Blog"
+author = "Shivam"
+copyright = "Copyright © 2020, Shivam R."
+languageCode = "en-US"
+enableRobotsTXT = true
+disableKinds = ["taxonomy"]
+ignoreErrors = ["error-disable-taxonomy"]
+
+[permalinks]
+  life = "/:slug/"
+  book-notes = "/book-notes/:slug/"
+
+[params]
+  description = "Musings + Life + & + CS = :heart:"
+  favicon = "images/favicon.png"
+  images = ["images/share.png"]
+  title = "Hugo ʕ•ᴥ•ʔ Bear"
+
+[menu]
+  [[menu.main]]
+    identifier = "life"
+    name = "Life"
+    url = "/life/"
+    weight = 1
+
+  [[menu.main]]
+    identifier = "book-notes"
+    name = "Book Notes"
+    url = "/book-notes/"
+    weight = 2

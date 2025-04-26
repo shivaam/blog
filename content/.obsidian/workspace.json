@@ -1,0 +1,180 @@
+{
+  "main": {
+    "id": "928e6e3183101750",
+    "type": "split",
+    "children": [
+      {
+        "id": "b2eda33e4e329b7c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "baec32743e0677b3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "life/Markdown Syntax Guide.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Markdown Syntax Guide"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "d50beb2f1739f048",
+    "type": "split",
+    "children": [
+      {
+        "id": "ba1489dd0a5c2238",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d488d2a89002b203",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "ef7b31bb14736028",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "46aaa06e2732909c",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "868918f47e5141e4",
+    "type": "split",
+    "children": [
+      {
+        "id": "6e73ba42a4200061",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "33ddcb57bb8225c9",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "life/Markdown Syntax Guide.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Markdown Syntax Guide"
+            }
+          },
+          {
+            "id": "e12effc94edbd49b",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "life/My First Blog.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from My First Blog"
+            }
+          },
+          {
+            "id": "3aa0f4aaf2ee9af9",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "08b443eecba7f26e",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "life/My First Blog.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of My First Blog"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "baec32743e0677b3",
+  "lastOpenFiles": [
+    "life/Markdown Syntax Guide.md",
+    "book-notes/Non Violence Communication.md",
+    "life/My First Blog.md",
+    "index.md",
+    "book-notes/_index.md",
+    "life/_index.md"
+  ]
+}
