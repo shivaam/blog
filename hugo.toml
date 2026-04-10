@@ -20,6 +20,14 @@ ignoreErrors = ["error-disable-taxonomy"]
   github = "https://github.com/shivaam"
   linkedin = "https://www.linkedin.com/in/shivaamrastogi"
 
+[markup]
+  [markup.highlight]
+    noClasses = false
+    lineNos = false
+    codeFences = true
+    guessSyntax = false
+    tabWidth = 4
+
 [menu]
   [[menu.main]]
     identifier = "tech"
