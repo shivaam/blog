@@ -17,14 +17,15 @@ Here's how I found it and fixed it.
 
 Airflow has a feature called DAG run deadlines. You attach a deadline to a DAG run, and if the run takes longer than the deadline, Airflow fires a callback — typically an alert. Under the hood, a row is created in a `deadline` table, and the scheduler periodically scans for expired rows and processes them.
 
-The processing loop lives in `scheduler_job_runner.py` and looks roughly like this:
+The processing loop lives inline in `scheduler_job_runner.py` — selecting expired, not-yet-missed deadlines and calling `handle_miss` on each one. Simplified:
 
 ```python
-expired_deadlines = (
-    session.query(Deadline)
-    .filter(Deadline.deadline_time < utcnow(), Deadline.callback_state.is_(None))
-    .all()
-)
+expired_deadlines = session.scalars(
+    select(Deadline).where(
+        Deadline.deadline_time < utcnow(),
+        ~Deadline.missed,
+    )
+).all()
 
 for deadline in expired_deadlines:
     deadline.handle_miss(session)
@@ -46,7 +47,7 @@ t=3  Scheduler B: handle_miss(row 42) → creates ANOTHER Trigger
 t=4  Both triggers eventually fire the deadline breach callback
 ```
 
-There's no lock, no coordination, nothing stopping both schedulers from processing the same row. `handle_miss` itself doesn't check whether a trigger already exists. So you get two callbacks where you expected one.
+There's no lock, no coordination, nothing stopping both schedulers from processing the same row. Two callbacks where you expected one.
 
 The bug report ([#64710](https://github.com/apache/airflow/issues/64710)) described this as "duplicate deadline callbacks under HA" — a vague symptom. The root cause only becomes obvious once you know how Airflow protects other parts of the scheduler under HA.
 
@@ -63,25 +64,24 @@ The deadline loop was the only one that had forgotten this pattern.
 The fix is mechanically small:
 
 ```python
-expired_deadlines = (
+expired_deadlines = session.scalars(
     with_row_locks(
-        session.query(Deadline).filter(
+        select(Deadline).where(
             Deadline.deadline_time < utcnow(),
-            Deadline.callback_state.is_(None),
+            ~Deadline.missed,
         ),
         of=Deadline,
         skip_locked=True,
         key_share=False,
     )
-    .all()
-)
+).all()
 ```
 
 Three keyword arguments and the problem goes away. But one of them deserves a paragraph.
 
 ## Why `key_share=False` matters
 
-`with_row_locks` defaults to `FOR KEY SHARE` on Postgres. `FOR KEY SHARE` is a weaker lock — it only blocks locks that would modify the primary key or foreign keys. Crucially, **it does not conflict with itself**. Two transactions can both hold `FOR KEY SHARE` on the same row at the same time.
+`with_row_locks` defaults to `FOR KEY SHARE` on Postgres. It exists for foreign-key enforcement: it prevents other transactions from deleting the row or updating its key columns, but otherwise lets concurrent readers and non-key updaters proceed. Crucially, **it does not conflict with itself**. Two transactions can both hold `FOR KEY SHARE` on the same row at the same time.
 
 That's the whole bug, one level down. If I had just passed `skip_locked=True` and left the default, both schedulers would still have been able to acquire `FOR KEY SHARE` on the same deadline row, `SKIP LOCKED` wouldn't have triggered because neither transaction was blocked, and the duplicate callback would still have fired.
 
@@ -93,26 +93,31 @@ This is the kind of subtlety that makes HA bugs so gnarly. The fix is three line
 
 The hardest part of the PR was writing a regression test. Unit tests run in a single process against a single database session — the whole point of the bug is that it requires two *independent* sessions contending for the same row.
 
-I solved it by opening a second, unscoped session inside the test:
+The deadline loop is inline inside `SchedulerJobRunner._do_scheduling`, so the test drives the real scheduler via `job_runner._execute()` and mocks `Deadline.handle_miss` to observe whether the row gets picked up. The trick is to hold a competing row lock from a *second* session before the scheduler runs:
 
 ```python
+import pytest
+from unittest import mock
 from airflow.utils.session import create_session
 
-def test_expired_deadline_locked_by_other_scheduler_is_skipped(session, dag_maker):
+@pytest.mark.skip_if_database_isolation_mode
+@pytest.mark.backend("postgres")
+def test_expired_deadline_locked_by_other_scheduler_is_skipped(dag_maker):
     # Arrange: create an expired deadline
     deadline = make_expired_deadline(...)
-    session.add(deadline)
-    session.commit()
 
     # Simulate a second scheduler holding the row lock
     with create_session(scoped=False) as other_session:
-        other_session.query(Deadline).filter(
-            Deadline.id == deadline.id
-        ).with_for_update().one()
+        other_session.scalars(
+            select(Deadline)
+            .where(Deadline.id == deadline.id)
+            .with_for_update()
+        ).one()
 
-        # Now run the real scheduler loop in the main session
+        # Now run the real scheduler loop
         with mock.patch.object(Deadline, "handle_miss") as mock_handle:
-            scheduler_job_runner._check_deadlines(session)
+            job_runner = SchedulerJobRunner(job=Job())
+            job_runner._execute()
 
         # Assert: handle_miss was never called, because the row was locked
         mock_handle.assert_not_called()
@@ -120,7 +125,9 @@ def test_expired_deadline_locked_by_other_scheduler_is_skipped(session, dag_make
 
 The `scoped=False` bit is important. Airflow's default session is scoped to the current thread, so `create_session()` in the same thread gives you the *same* connection — which means no contention. `scoped=False` gets you a fresh connection so the lock actually exists across two distinct transactions.
 
-I verified the test fails without the fix (`Expected 'handle_miss' to not have been called. Called 1 times`) and passes with the fix applied. The test is skipped on SQLite because SQLite is a single-writer database that doesn't support row locking — there's no way to simulate HA on it.
+The `@pytest.mark.backend("postgres")` marker scopes the test to Postgres runs only. The CI matrix runs the whole suite against SQLite and Postgres, and SQLite is a single-writer database that can't express row-level contention — so the test is a no-op there. On Postgres it verifies the real behavior.
+
+I verified the test fails without the fix (`Expected 'handle_miss' to not have been called. Called 1 times`) and passes with the fix applied.
 
 ## What I learned
 
