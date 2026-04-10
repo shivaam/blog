@@ -138,10 +138,3 @@ And the repos:
 - [babblebox-cdk-pipeline](https://github.com/shivaam/babblebox-cdk-pipeline) — Django CI/CD
 - [whisper-pulsar-consumer-cdk](https://github.com/shivaam/whisper-pulsar-consumer-cdk) — Whisper consumer infra
 
-## The meta-lesson
-
-I used to feel slightly guilty about over-engineered side projects. "This doesn't need Kubernetes." "This doesn't need microservices." "You're cargo-culting enterprise architecture for no reason."
-
-I'm past that. The project is a pretext. The architecture *is* the lesson. The unfinished TODOs are the thing that tells me I've stopped learning and should pick a different project next. When I stop being scared of a technology, I'm done with it, and this project has done its job for most of its stack.
-
-Next up: actual production systems, with actual users, and the unglamorous work of keeping them running. That's the real final boss.
