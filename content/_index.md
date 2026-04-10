@@ -1,12 +1,12 @@
 ---
-title: "Welcome to Shiv's Blog"
-description: "Curious thoughts, book learnings, and experiments in code."
+title: "Shivam Rastogi"
+description: "SDE at Amazon. Apache Airflow contributor. Writing about distributed systems and developer tools."
 ---
 
-Hi! I'm Shivam 👋
+### Hi, I'm Shivam 👋
 
-This is my personal digital garden where I share:
-- Blog posts on tech, life, and productivity
-- Notes and summaries from books I’ve read
+📍 **Seattle** | 💼 **SDE @ Amazon** | 🧰 **Apache Airflow Contributor**
 
-Thanks for stopping by!
+> Building developer tools, contributing to the Apache ecosystem, and shipping infrastructure with AWS CDK. This is where I write about what I learn along the way.
+
+I contribute to [Apache Airflow](https://github.com/apache/airflow) (10 merged PRs and counting) and build small tools that scratch my own itches. Outside of tech, I read a lot and take book notes — you'll find those under [Life](/life/) and [Book Notes](/book-notes/).

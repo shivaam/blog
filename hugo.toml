@@ -1,32 +1,40 @@
-baseURL = 'https://blog-7xu.pages.dev/'
+baseURL = 'https://shivamrastogi.com/'
 theme = 'hugo-bearblog'
-title = "Shiv's Blog"
-author = "Shivam"
-copyright = "Copyright © 2020, Shivam R."
+title = "Shivam Rastogi"
+author = "Shivam Rastogi"
+copyright = "Copyright © 2026, Shivam Rastogi"
 languageCode = "en-US"
 enableRobotsTXT = true
 disableKinds = ["taxonomy"]
 ignoreErrors = ["error-disable-taxonomy"]
 
 [permalinks]
+  tech = "/tech/:slug/"
   life = "/life/:slug/"
   book-notes = "/book-notes/:slug/"
 
 [params]
-  description = "Musings + Life + & + CS = :heart:"
+  description = "SDE at Amazon. Apache Airflow contributor. Writing about distributed systems and developer tools."
   favicon = "images/favicon.png"
   images = ["images/share.png"]
-  title = "Hugo ʕ•ᴥ•ʔ Bear"
+  github = "https://github.com/shivaam"
+  linkedin = "https://www.linkedin.com/in/shivaamrastogi"
 
 [menu]
+  [[menu.main]]
+    identifier = "tech"
+    name = "Tech"
+    url = "/tech/"
+    weight = 1
+
   [[menu.main]]
     identifier = "life"
     name = "Life"
     url = "/life/"
-    weight = 1
+    weight = 2
 
   [[menu.main]]
     identifier = "book-notes"
     name = "Book Notes"
     url = "/book-notes/"
-    weight = 2
+    weight = 3

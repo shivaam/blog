@@ -1,0 +1,27 @@
+{{ define "main" }}
+<content>
+  {{ .Content }}
+
+  <h2 style="margin-top:2em; margin-bottom:0.5em;">Recent writing</h2>
+  <ul class="blog-posts">
+    {{ $tech := where .Site.RegularPages "Section" "tech" }}
+    {{ range first 10 $tech }}
+    <li>
+      <span>
+        <i>
+          <time datetime='{{ .Date.Format "2006-01-02" }}'>
+            {{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}
+          </time>
+        </i>
+      </span>
+      <div>
+        <a href="{{ .Permalink }}">{{ .Title }}</a>
+        {{ with .Description }}<br/><small>{{ . }}</small>{{ end }}
+      </div>
+    </li>
+    {{ else }}
+    <li>No tech posts yet — stay tuned.</li>
+    {{ end }}
+  </ul>
+</content>
+{{ end }}
